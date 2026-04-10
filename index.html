@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Банный Гид</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: sans-serif; background-color: var(--tg-theme-bg-color); color: var(--tg-theme-text-color); padding: 20px; }
+        .card { background: var(--tg-theme-secondary-bg-color); border-radius: 10px; padding: 15px; margin-bottom: 10px; border: 1px solid #ccc; }
+        button { background: var(--tg-theme-button-color); color: var(--tg-theme-button-text-color); border: none; padding: 10px; border-radius: 5px; width: 100%; }
+    </style>
+</head>
+<body>
+    <h2>Список заведений (Актобе)</h2>
+    <div id="app">
+        <div class="card">
+            <h3>Баня "Пар Хаус"</h3>
+            <p>Рейтинг: ⭐ 5.0</p>
+            <button onclick="sendData('Пар Хаус')">Оставить отзыв</button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Расширить на весь экран
+
+        function sendData(name) {
+            // Отправляем данные боту и закрываем приложение
+            tg.sendData("Вы выбрали: " + name);
+        }
+    </script>
+</body>
+</html>
