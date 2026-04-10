@@ -2,127 +2,103 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Protocol 99</title>
+    <title>НЕ ВХОДИТЬ</title>
     <style>
         body {
-            background-color: #2c3e50;
+            background-color: #1a1a1a;
+            color: #cccccc;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
+            flex-direction: column;
         }
 
-        /* Панель управления */
-        .panel {
-            background: #ecf0f1;
-            padding: 50px;
-            border-radius: 20px;
-            border: 10px solid #bdc3c7;
-            box-shadow: 20px 20px 0px #34495e;
+        .warning-box {
             text-align: center;
-            position: relative;
+            border: 4px solid #333;
+            padding: 50px;
+            background-color: #222;
         }
 
-        h2 {
-            color: #c0392b;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        h1 {
+            color: #ff4444;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1rem;
             margin-bottom: 30px;
+            color: #888;
         }
 
-        /* Та самая кнопка */
-        .big-red-button {
-            width: 150px;
-            height: 150px;
-            background-color: #e74c3c;
-            border: none;
-            border-radius: 50%;
-            box-shadow: 0 10px 0 #c0392b, 0 15px 20px rgba(0,0,0,0.4);
-            cursor: pointer;
-            transition: all 0.1s;
-            position: relative;
-            outline: none;
-        }
-
-        .big-red-button:active {
-            box-shadow: 0 2px 0 #c0392b, 0 5px 10px rgba(0,0,0,0.4);
-            transform: translateY(8px);
-        }
-
-        .big-red-button::after {
-            content: "НЕ ЖАТЬ";
+        /* Обычная, скучная кнопка */
+        .btn {
+            background-color: #444;
             color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
         }
 
-        /* Экран с гифкой */
+        .btn:hover {
+            background-color: #555;
+        }
+
+        /* Оверлей для гифки */
         #overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(231, 76, 60, 0.9);
-            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 999;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
         }
 
-        .gif-frame {
-            border: 15px solid white;
-            border-radius: 10px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        img {
             max-width: 90%;
+            max-height: 80%;
         }
 
-        .status-msg {
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
+        .close-text {
             margin-top: 20px;
-            background: black;
-            padding: 10px 20px;
+            color: #444;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
 
-    <div class="panel">
-        <h2>Emergency System</h2>
-        <div style="margin: 20px 0;">
-            <div style="width: 20px; height: 20px; background: #27ae60; border-radius: 50%; display: inline-block; animation: pulse 1s infinite;"></div>
-            <span style="color: #7f8c8d; font-weight: bold;">SYSTEM READY</span>
-        </div>
-        <button class="big-red-button" onclick="activate()"></button>
+    <div class="warning-box">
+        <h1>403: ДОСТУП ЗАПРЕЩЕН</h1>
+        <p>Администрация не рекомендует нажимать на эту кнопку.</p>
+        <button class="btn" onclick="openSecret()">Я всё равно нажму</button>
     </div>
 
-    <div id="overlay" onclick="deactivate()">
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y1ZnR3Ym5qZ3R4eG54eG54eG54eG54eG54eG54eG54eG54JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/10YqNf7V0pM000/giphy.gif" class="gif-frame">
-        <div class="status-msg">САМОЛИКВИДАЦИЯ ОТМЕНЕНА ПО ПРИЧИНЕ: НЕХУЙ</div>
-        <p style="color: white;">(Кликни, чтобы вернуться назад)</p>
+    <div id="overlay" onclick="closeSecret()">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y1ZnR3Ym5qZ3R4eG54eG54eG54eG54eG54eG54eG54eG54JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" alt="Rickroll">
+        <div class="close-text">Ну, тебя же предупреждали. (Кликни, чтобы уйти)</div>
     </div>
 
     <script>
-        function activate() {
+        function openSecret() {
             document.getElementById('overlay').style.display = 'flex';
-            // Можно добавить звук сирены, если очень хочется
         }
 
-        function deactivate() {
+        function closeSecret() {
             document.getElementById('overlay').style.display = 'none';
         }
     </script>
 
-    <style>
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-    </style>
 </body>
 </html>
