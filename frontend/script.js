@@ -1,4 +1,4 @@
-const socket = io('https://ваш-бэкенд.onrender.com'); // замените на реальный URL бэкенда
+const socket = io('https://test-mini-app-dnwv.onrender.com'); // замените на реальный URL бэкенда
 
 let currentRoomId = null;
 let gameActive = false;
