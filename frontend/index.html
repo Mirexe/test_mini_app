@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Морской бой</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>⚓ Морской бой</h1>
+    <div id="lobby" class="lobby">
+      <button id="createBtn" class="btn">➕ Создать игру</button>
+      <div class="join-area">
+        <input type="text" id="roomIdInput" placeholder="Код комнаты" class="input">
+        <button id="joinBtn" class="btn">🔗 Присоединиться</button>
+      </div>
+      <div id="roomInfo" class="room-info"></div>
+    </div>
+    
+    <div id="gameArea" style="display: none;">
+      <div class="players">
+        <div class="field-container">
+          <h3>🚢 Ваше поле</h3>
+          <div id="myBoard" class="board"></div>
+        </div>
+        <div class="field-container">
+          <h3>🎯 Поле противника</h3>
+          <div id="enemyBoard" class="board"></div>
+        </div>
+      </div>
+      <div id="gameStatus" class="status"></div>
+      <button id="newGameBtn" class="btn new-game" style="display: none;">🔄 Новая игра</button>
+    </div>
+  </div>
+  
+  <div id="messageOverlay" class="message-overlay"></div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
