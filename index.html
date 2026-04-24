@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Тетрис для смартфона</title>
+    <title>Тетрис — Компактный сенсорный</title>
     <style>
         * {
             user-select: none;
@@ -18,92 +18,112 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 16px;
+            padding: 12px;
             font-family: 'Segoe UI', system-ui, -apple-system, 'Roboto', sans-serif;
         }
 
         /* контейнер под экран смартфона */
         .game-container {
-            max-width: 450px;
+            max-width: 440px;
             width: 100%;
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 56px;
-            padding: 16px 12px 20px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 48px;
+            padding: 14px 12px 18px 12px;
             box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05);
             backdrop-filter: blur(2px);
         }
 
-        /* главная панель игровое поле + инфо */
+        /* главная панель */
         .main-panel {
             background: #101624;
             border-radius: 32px;
-            padding: 16px 12px;
+            padding: 14px 12px;
             box-shadow: inset 0 2px 3px #00000030, 0 8px 18px rgba(0,0,0,0.3);
         }
 
-        .game-area {
+        /* Верхняя панель: очки и следующая фигура в одну строку */
+        .top-stats {
             display: flex;
-            justify-content: center;
-            gap: 18px;
-            flex-wrap: wrap;
-            align-items: flex-start;
-        }
-
-        canvas {
-            display: block;
-            border-radius: 24px;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
-            background-color: #0b0e18;
-        }
-
-        #boardCanvas {
-            background-color: #0a0d16;
-            image-rendering: crisp-edges;
-        }
-
-        .info {
-            background: #0f1320;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            background: #0b0f1a;
             border-radius: 28px;
-            padding: 12px 18px;
-            min-width: 110px;
-            text-align: center;
-            box-shadow: inset 0 0 0 1px #2a2f3e, 0 6px 12px black;
+            padding: 8px 18px;
+            margin-bottom: 18px;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.03), 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        .score-box, .next-box {
-            color: #edf2ff;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
+        .score-compact {
+            flex: 2;
+            text-align: left;
         }
 
-        .score-box span, .next-box span {
+        .score-compact span.label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
             color: #8f9bb5;
-            margin-bottom: 6px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
         }
 
-        .score-value {
-            font-size: 2.3rem;
+        .score-value-compact {
+            font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #f0f3ff, #c0d0ff);
+            background: linear-gradient(135deg, #f0f3ff, #b9cdff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 2px 3px #00000030;
+            line-height: 1;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .next-compact {
+            flex: 1.2;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .next-compact span.label {
+            font-size: 0.7rem;
+            color: #8f9bb5;
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
         #nextCanvas {
             background-color: #0a0d16;
-            border-radius: 20px;
-            margin-top: 8px;
-            width: 90px;
-            height: 90px;
+            border-radius: 18px;
+            width: 70px;
+            height: 70px;
+            display: block;
+            box-shadow: inset 0 0 0 1px #282e40, 0 3px 6px black;
         }
 
+        /* игровое поле — чуть уменьшено по высоте */
+        .game-play-area {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        canvas#boardCanvas {
+            display: block;
+            border-radius: 24px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+            background-color: #0b0e18;
+            width: 100%;
+            height: auto;
+            image-rendering: crisp-edges;
+        }
+
+        /* контролы */
         .controls {
-            margin-top: 20px;
+            margin-top: 16px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -121,7 +141,7 @@
             font-size: 2rem;
             font-weight: bold;
             color: #dee5ff;
-            padding: 12px 20px;
+            padding: 10px 0;
             border-radius: 60px;
             box-shadow: 0 5px 0 #05070c;
             transition: all 0.05s linear;
@@ -133,9 +153,9 @@
             justify-content: center;
             align-items: center;
             font-family: monospace;
-            font-size: 2rem;
             backdrop-filter: blur(4px);
-            background: rgba(30, 38, 58, 0.9);
+            background: rgba(30, 38, 58, 0.95);
+            min-height: 56px;
         }
 
         .ctrl-btn:active {
@@ -147,8 +167,8 @@
             background: #c2412c;
             color: white;
             font-size: 1.1rem;
-            padding: 12px;
-            flex: 0.8;
+            padding: 10px;
+            flex: 0.7;
             text-transform: uppercase;
             font-weight: bold;
             letter-spacing: 2px;
@@ -157,28 +177,32 @@
         .game-status {
             text-align: center;
             margin-top: 14px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: bold;
             background: #00000066;
             border-radius: 50px;
-            padding: 6px;
-            color: #ffd966;
+            padding: 5px 10px;
+            color: #ffda88;
         }
 
         @media (max-width: 480px) {
             .ctrl-btn {
-                padding: 10px 12px;
+                font-size: 1.6rem;
+                padding: 8px 0;
+                min-height: 50px;
+            }
+            .score-value-compact {
                 font-size: 1.7rem;
             }
-            .game-container {
-                padding: 12px 8px;
+            .next-compact span.label {
+                font-size: 0.6rem;
             }
-            .info {
-                padding: 8px 12px;
-                min-width: 90px;
+            #nextCanvas {
+                width: 60px;
+                height: 60px;
             }
-            .score-value {
-                font-size: 1.8rem;
+            .top-stats {
+                padding: 6px 14px;
             }
         }
     </style>
@@ -186,18 +210,21 @@
 <body>
 <div class="game-container">
     <div class="main-panel">
-        <div class="game-area">
-            <canvas id="boardCanvas" width="300" height="600"></canvas>
-            <div class="info">
-                <div class="score-box">
-                    <span>ОЧКИ</span>
-                    <div class="score-value" id="scoreDisplay">0</div>
-                </div>
-                <div class="next-box">
-                    <span>СЛЕДУЮЩАЯ</span>
-                    <canvas id="nextCanvas" width="120" height="120"></canvas>
-                </div>
+        <!-- Верхняя строка: очки + следующая фигура -->
+        <div class="top-stats">
+            <div class="score-compact">
+                <span class="label">ОЧКИ</span>
+                <div class="score-value-compact" id="scoreDisplay">0</div>
             </div>
+            <div class="next-compact">
+                <span class="label">NEXT</span>
+                <canvas id="nextCanvas" width="120" height="120" style="width:70px; height:70px;"></canvas>
+            </div>
+        </div>
+
+        <!-- игровое поле (уменьшена высота за счёт изменения размеров канваса) -->
+        <div class="game-play-area">
+            <canvas id="boardCanvas" width="300" height="540"></canvas>
         </div>
 
         <div class="controls">
@@ -212,16 +239,16 @@
                 <button class="ctrl-btn restart-btn" id="restartBtn">🔄</button>
             </div>
         </div>
-        <div class="game-status" id="gameStatus">▶ ИГРА АКТИВНА</div>
+        <div class="game-status" id="gameStatus">🎮 ИГРА АКТИВНА</div>
     </div>
 </div>
 
 <script>
     (function() {
-        // ---------- ПАРАМЕТРЫ ТЕТРИСА ----------
+        // ---------- НОВЫЕ РАЗМЕРЫ: ширина 10 блоков, высота 18 блоков (540/30 = 18) ----------
         const COLS = 10;
-        const ROWS = 20;
-        const BLOCK_SIZE = 30;    // canvas 300x600
+        const ROWS = 18;        // уменьшили высоту с 20 до 18 блоков
+        const BLOCK_SIZE = 30;   // canvas 300x540px
         
         // Элементы
         const boardCanvas = document.getElementById('boardCanvas');
@@ -232,14 +259,14 @@
         const gameStatusDiv = document.getElementById('gameStatus');
         
         // Игровые переменные
-        let board = [];           // 2d массив (ROWS x COLS) цвет/0
-        let activePiece = null;   // { shape, x, y, color }
+        let board = [];           
+        let activePiece = null;   
         let nextPiece = null;
         let score = 0;
         let gameLoopInterval = null;
         let isGameOver = false;
         
-        // Фигуры (классический тетрис)
+        // Фигуры (классика с цветами)
         const TETROMINOS = [
             {   // I
                 shape: [[1,1,1,1]],
@@ -271,11 +298,9 @@
             }
         ];
         
-        // Вспомогательные функции для фигур
         function getRandomTetromino() {
             const idx = Math.floor(Math.random() * TETROMINOS.length);
             const original = TETROMINOS[idx];
-            // глубокое копирование формы
             const shapeCopy = original.shape.map(row => [...row]);
             return {
                 shape: shapeCopy,
@@ -283,42 +308,11 @@
             };
         }
         
-        // инициализация/сброс доски
         function initBoard() {
             board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
         }
         
-        // спавн новой фигуры (из next или случайной если нет next)
-        function spawnNewPiece() {
-            if (!nextPiece) {
-                nextPiece = getRandomTetromino();
-            }
-            // активная фигура = текущая next
-            const newPiece = {
-                shape: nextPiece.shape.map(row => [...row]),
-                color: nextPiece.color,
-                x: Math.floor((COLS - nextPiece.shape[0].length) / 2),
-                y: 0
-            };
-            activePiece = newPiece;
-            
-            // генерируем следующую фигуру
-            nextPiece = getRandomTetromino();
-            
-            // если при спавне сразу коллизия -> игра окончена
-            if (collision(activePiece.shape, activePiece.x, activePiece.y)) {
-                isGameOver = true;
-                if (gameLoopInterval) clearInterval(gameLoopInterval);
-                gameLoopInterval = null;
-                gameStatusDiv.innerText = '💀 ИГРА ОКОНЧЕНА. НАЖМИТЕ 🔄 💀';
-                drawBoard();
-                return false;
-            }
-            drawBoard();
-            return true;
-        }
-        
-        // Проверка столкновения фигуры shape с текущей доской с учетом смещения (offX, offY)
+        // проверка коллизии
         function collision(shape, offX, offY) {
             for (let row = 0; row < shape.length; row++) {
                 for (let col = 0; col < shape[0].length; col++) {
@@ -337,9 +331,36 @@
             return false;
         }
         
-        // зафиксировать активную фигуру на доске
+        // спавн новой фигуры
+        function spawnNewPiece() {
+            if (!nextPiece) {
+                nextPiece = getRandomTetromino();
+            }
+            const newPiece = {
+                shape: nextPiece.shape.map(row => [...row]),
+                color: nextPiece.color,
+                x: Math.floor((COLS - nextPiece.shape[0].length) / 2),
+                y: 0
+            };
+            activePiece = newPiece;
+            nextPiece = getRandomTetromino();
+            
+            if (collision(activePiece.shape, activePiece.x, activePiece.y)) {
+                isGameOver = true;
+                if (gameLoopInterval) clearInterval(gameLoopInterval);
+                gameLoopInterval = null;
+                gameStatusDiv.innerText = '💀 ИГРА ОКОНЧЕНА. НАЖМИТЕ 🔄 💀';
+                drawBoard();
+                return false;
+            }
+            drawBoard();
+            return true;
+        }
+        
+        // зафиксировать фигуру
         function mergePiece() {
             if (!activePiece) return false;
+            // Запись на доску
             for (let row = 0; row < activePiece.shape.length; row++) {
                 for (let col = 0; col < activePiece.shape[0].length; col++) {
                     if (activePiece.shape[row][col] !== 0) {
@@ -352,7 +373,7 @@
                 }
             }
             
-            // очистка линий и подсчет очков
+            // очистка линий
             let linesCleared = 0;
             for (let row = ROWS-1; row >= 0; ) {
                 let full = true;
@@ -363,19 +384,16 @@
                     }
                 }
                 if (full) {
-                    // удаляем строку: сдвигаем всё вниз
                     for (let r = row; r > 0; r--) {
                         board[r] = [...board[r-1]];
                     }
                     board[0] = Array(COLS).fill(0);
                     linesCleared++;
-                    // проверяем ту же строку снова (теперь новая)
                 } else {
                     row--;
                 }
             }
             
-            // начисление очков
             if (linesCleared > 0) {
                 const points = [0, 100, 300, 600, 1000];
                 const addPoints = points[Math.min(linesCleared,4)];
@@ -383,14 +401,12 @@
                 updateScoreUI();
             }
             
-            // после мержа создаем новую фигуру
             const success = spawnNewPiece();
             drawBoard();
             if (isGameOver) return false;
             return success;
         }
         
-        // перемещение
         function movePiece(dx, dy) {
             if (!activePiece || isGameOver) return false;
             const newX = activePiece.x + dx;
@@ -401,7 +417,6 @@
                 drawBoard();
                 return true;
             } else if (dy === 1) {
-                // движение вниз невозможно => фиксация
                 mergePiece();
                 drawBoard();
                 return false;
@@ -409,17 +424,13 @@
             return false;
         }
         
-        // поворот
         function rotatePiece() {
             if (!activePiece || isGameOver) return;
-            // матрица поворота 90 градусов
             const oldShape = activePiece.shape;
             const rotated = oldShape[0].map((_, idx) => oldShape.map(row => row[idx]).reverse());
-            // проверка коллизии после поворота
             if (!collision(rotated, activePiece.x, activePiece.y)) {
                 activePiece.shape = rotated;
             } else {
-                // стена-сдвиг (wall kick упрощенный) — пробуем сместить влево/вправо
                 for (let offset of [-1, 1, -2, 2]) {
                     if (!collision(rotated, activePiece.x + offset, activePiece.y)) {
                         activePiece.shape = rotated;
@@ -431,44 +442,40 @@
             drawBoard();
         }
         
-        // сброс вниз (хард дроп)
         function hardDrop() {
             if (!activePiece || isGameOver) return;
             while (!collision(activePiece.shape, activePiece.x, activePiece.y + 1)) {
                 activePiece.y++;
             }
-            mergePiece();  // фиксация после падения
+            mergePiece();
             drawBoard();
         }
         
-        // обновить ui очков
         function updateScoreUI() {
             scoreSpan.innerText = score;
         }
         
-        // отрисовка (игровое поле + activePiece)
         function drawBoard() {
-            ctx.clearRect(0, 0, 300, 600);
-            // отрисовка сетки и блоков доски
+            ctx.clearRect(0, 0, 300, 540);
+            // Отрисовка сетки и блоков доски
             for (let row = 0; row < ROWS; row++) {
                 for (let col = 0; col < COLS; col++) {
                     const color = board[row][col];
                     if (color !== 0) {
                         ctx.fillStyle = color;
                         ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE-0.5, BLOCK_SIZE-0.5);
-                        ctx.shadowBlur = 0;
                         ctx.fillStyle = 'rgba(255,255,240,0.2)';
-                        ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE-1, 2);
+                        ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE-2, 2);
                     } else {
                         ctx.fillStyle = '#10131f';
                         ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE-0.5, BLOCK_SIZE-0.5);
                         ctx.strokeStyle = '#202536';
-                        ctx.strokeRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE-0.5, BLOCK_SIZE-0.5);
+                        ctx.strokeRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE-0.8, BLOCK_SIZE-0.8);
                     }
                 }
             }
             
-            // отрисовка активной фигуры
+            // активная фигура
             if (activePiece && !isGameOver) {
                 const shape = activePiece.shape;
                 for (let row = 0; row < shape.length; row++) {
@@ -479,28 +486,26 @@
                             ctx.fillStyle = activePiece.color;
                             ctx.fillRect(x, y, BLOCK_SIZE-0.5, BLOCK_SIZE-0.5);
                             ctx.fillStyle = 'rgba(255,250,210,0.35)';
-                            ctx.fillRect(x, y, BLOCK_SIZE-4, 2);
+                            ctx.fillRect(x+2, y+2, BLOCK_SIZE-8, 3);
                         }
                     }
                 }
             }
             
-            // рамка game over overlay (если конец)
             if (isGameOver) {
-                ctx.globalAlpha = 0.65;
-                ctx.fillStyle = '#000000';
-                ctx.fillRect(0, 0, 300, 600);
+                ctx.globalAlpha = 0.7;
+                ctx.fillStyle = '#0a0c16';
+                ctx.fillRect(0, 0, 300, 540);
                 ctx.globalAlpha = 1;
-                ctx.fillStyle = '#ffcaca';
+                ctx.fillStyle = '#ffddbb';
                 ctx.font = 'bold 18px "Segoe UI"';
                 ctx.shadowBlur = 0;
-                ctx.fillText('GAME OVER', 75, 280);
-                ctx.font = '11px monospace';
+                ctx.fillText('GAME OVER', 72, 250);
+                ctx.font = '10px monospace';
                 ctx.fillStyle = '#bbaa88';
-                ctx.fillText('нажмите обновить', 95, 340);
+                ctx.fillText('нажмите 🔄', 112, 310);
             }
             
-            // отрисовка следующей фигуры
             drawNext();
         }
         
@@ -511,53 +516,44 @@
             if (nextPiece) {
                 const shape = nextPiece.shape;
                 const color = nextPiece.color;
-                const blockW = 120 / 4;  // 30px (хватит)
+                // адаптивный размер блока внутри превью
+                const blockSize = 24;
                 const shapeCols = shape[0].length;
                 const shapeRows = shape.length;
-                const startX = (120 - (shapeCols * 24)) / 2;
-                const startY = (120 - (shapeRows * 24)) / 2;
+                const totalW = shapeCols * blockSize;
+                const totalH = shapeRows * blockSize;
+                const startX = (120 - totalW) / 2;
+                const startY = (120 - totalH) / 2;
                 for (let row = 0; row < shapeRows; row++) {
                     for (let col = 0; col < shapeCols; col++) {
                         if (shape[row][col]) {
                             nextCtx.fillStyle = color;
-                            nextCtx.fillRect(startX + col * 24, startY + row * 24, 22, 22);
-                            nextCtx.fillStyle = 'rgba(255,245,200,0.4)';
-                            nextCtx.fillRect(startX + col * 24 + 2, startY + row * 24 + 2, 10, 4);
+                            nextCtx.fillRect(startX + col * blockSize, startY + row * blockSize, blockSize-1, blockSize-1);
+                            nextCtx.fillStyle = 'rgba(255,245,210,0.5)';
+                            nextCtx.fillRect(startX + col * blockSize + 2, startY + row * blockSize + 2, blockSize-6, 4);
                         }
                     }
                 }
             }
         }
         
-        // игровой тик (падение каждые 420 мс)
         function gameTick() {
             if (!isGameOver && activePiece) {
-                // движение вниз каждые тик
-                if (!movePiece(0, 1)) {
-                    // если movePiece вернул false из-за мержа, перерисовка уже была
-                    drawBoard();
-                } else {
-                    drawBoard();
-                }
-            } else if (isGameOver && gameLoopInterval) {
-                // если игра кончилась, уже отображено
+                movePiece(0, 1);
+                drawBoard();
             }
         }
         
-        // сброс игры полностью
         function restartGame() {
             if (gameLoopInterval) {
                 clearInterval(gameLoopInterval);
                 gameLoopInterval = null;
             }
-            // сброс переменных
             isGameOver = false;
             score = 0;
             updateScoreUI();
             initBoard();
-            // сброс фигур
             nextPiece = getRandomTetromino();
-            // спавн активной фигуры
             const startPiece = getRandomTetromino();
             activePiece = {
                 shape: startPiece.shape.map(row => [...row]),
@@ -565,22 +561,18 @@
                 x: Math.floor((COLS - startPiece.shape[0].length) / 2),
                 y: 0
             };
-            // следующая
             nextPiece = getRandomTetromino();
-            // проверка сразу на game over (маловероятно)
             if (collision(activePiece.shape, activePiece.x, activePiece.y)) {
                 isGameOver = true;
-                gameStatusDiv.innerText = '⚠️ ОШИБКА РЕСТАРТА, ПЕРЕЗАПУСТИТЕ';
+                gameStatusDiv.innerText = '⚠️ РЕСТАРТ ОШИБКА, ПОВТОРИТЕ';
             } else {
                 isGameOver = false;
-                gameStatusDiv.innerText = '🟢 ИГРА АКТИВНА';
+                gameStatusDiv.innerText = '🎮 ИГРА АКТИВНА';
             }
             drawBoard();
-            // запускаем интервал заново
-            gameLoopInterval = setInterval(() => gameTick(), 380);
+            gameLoopInterval = setInterval(() => gameTick(), 390);
         }
         
-        // инициализация событий для касаний/мыши
         function attachControls() {
             const left = document.getElementById('leftBtn');
             const right = document.getElementById('rightBtn');
@@ -589,12 +581,12 @@
             const drop = document.getElementById('dropBtn');
             const restart = document.getElementById('restartBtn');
             
-            const handler = (fn) => (e) => {
+            const handler = (fn, allowOnGameOver = false) => (e) => {
                 e.preventDefault();
-                if (!isGameOver) fn();
-                else if (fn === restartGame) fn();
-                else return;
-                drawBoard();
+                if (!isGameOver || allowOnGameOver) {
+                    fn();
+                    drawBoard();
+                }
             };
             
             left.addEventListener('click', handler(() => movePiece(-1, 0)));
@@ -607,7 +599,6 @@
                 restartGame();
             });
             
-            // поддержка тач событий для предотвращения зума при двойных тапах (не критично)
             const btns = [left, right, down, rotate, drop, restart];
             btns.forEach(btn => {
                 btn.addEventListener('touchstart', (e) => {
@@ -617,10 +608,8 @@
             });
         }
         
-        // дополнительно обеспечить паузу при game over, управление не ломает
         function startGame() {
             initBoard();
-            // инициализация фигур
             nextPiece = getRandomTetromino();
             const firstPiece = getRandomTetromino();
             activePiece = {
@@ -633,10 +622,10 @@
             score = 0;
             updateScoreUI();
             isGameOver = false;
-            gameStatusDiv.innerText = '🟢 ИГРА АКТИВНА';
+            gameStatusDiv.innerText = '🎮 ИГРА АКТИВНА';
             drawBoard();
             if (gameLoopInterval) clearInterval(gameLoopInterval);
-            gameLoopInterval = setInterval(() => gameTick(), 380);
+            gameLoopInterval = setInterval(() => gameTick(), 390);
         }
         
         attachControls();
