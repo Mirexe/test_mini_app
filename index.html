@@ -2,103 +2,650 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>НЕ ВХОДИТЬ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Блять-кликер | Собирай валюту "Блять"</title>
     <style>
+        * {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #1a1a1a;
-            color: #cccccc;
-            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #1a2a1f 0%, #0e1a0c 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
+            font-family: 'Segoe UI', 'Poppins', 'Roboto', system-ui, -apple-system, sans-serif;
+            padding: 20px;
         }
 
-        .warning-box {
-            text-align: center;
-            border: 4px solid #333;
-            padding: 50px;
-            background-color: #222;
-        }
-
-        h1 {
-            color: #ff4444;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            color: #888;
-        }
-
-        /* Обычная, скучная кнопка */
-        .btn {
-            background-color: #444;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .btn:hover {
-            background-color: #555;
-        }
-
-        /* Оверлей для гифки */
-        #overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* основной контейнер */
+        .game-container {
+            max-width: 550px;
             width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 999;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(2px);
+            border-radius: 80px 80px 60px 60px;
+            padding: 20px 18px 30px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 215, 140, 0.3);
+            transition: all 0.2s;
+        }
+
+        /* шапка с балансом */
+        .balance-panel {
+            background: #2c2118e0;
+            backdrop-filter: blur(8px);
+            border-radius: 100px;
+            padding: 12px 24px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 5px #00000033, 0 5px 12px #0000002e;
+            border: 1px solid #e4b36370;
+        }
+
+        .currency-name {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #ffdfb3;
+            text-transform: uppercase;
+            text-shadow: 0 1px 2px black;
+        }
+
+        .balance-amount {
+            font-size: 3.6rem;
+            font-weight: 900;
+            color: #f6e05e;
+            text-shadow: 0 4px 0 #7a4b1a;
+            line-height: 1;
+            word-break: break-word;
+            margin-top: 6px;
+        }
+
+        .balance-amount span {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* КРУПНЫЙ КЛИКЕР (кнопка) */
+        .click-area {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0 25px;
+        }
+
+        .bling-btn {
+            background: radial-gradient(circle at 30% 25%, #ffdd99, #d68b2c);
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 18px 25px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.7), inset 0 -5px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.07s linear, box-shadow 0.1s;
+            border: none;
+            font-weight: bold;
+            color: #2e241a;
+            text-align: center;
         }
 
-        img {
-            max-width: 90%;
-            max-height: 80%;
+        .bling-btn:active {
+            transform: scale(0.94);
+            box-shadow: 0 8px 15px black;
         }
 
-        .close-text {
+        .bling-emoji {
+            font-size: 5rem;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4));
+            margin-bottom: 8px;
+        }
+
+        .bling-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: #2b1a0c99;
+            padding: 5px 16px;
+            border-radius: 60px;
+            color: #fff0c0;
+        }
+
+        .click-hint {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            background: #00000066;
+            border-radius: 30px;
+            padding: 5px 12px;
+            display: inline-block;
+            color: #e7cf96;
+        }
+
+        /* секция прокачки */
+        .upgrades-section {
+            background: #191e12b3;
+            border-radius: 48px;
+            padding: 18px 15px;
+            margin-top: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffeaac;
+            text-align: center;
+            margin-bottom: 18px;
+            border-bottom: 2px dashed #eab354;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .upgrade-card {
+            background: #2b2a1fe6;
+            border-radius: 80px;
+            margin-bottom: 14px;
+            padding: 8px 18px 8px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            transition: 0.1s;
+            border: 1px solid #cfb26e;
+            box-shadow: 0 4px 8px black;
+        }
+
+        .upgrade-info {
+            flex: 2;
+            min-width: 140px;
+        }
+
+        .upgrade-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #ffd58c;
+        }
+
+        .upgrade-desc {
+            font-size: 0.75rem;
+            color: #ddd0aa;
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .upgrade-price {
+            background: #000000aa;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-weight: bold;
+            color: #ffc857;
+        }
+
+        .upgrade-btn {
+            background: #6f4e2c;
+            border: none;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 1rem;
+            color: #f9efcf;
+            cursor: pointer;
+            transition: 0.07s linear;
+            box-shadow: 0 2px 6px black;
+            min-width: 100px;
+        }
+
+        .upgrade-btn:active {
+            transform: scale(0.96);
+        }
+
+        .upgrade-btn.disabled {
+            opacity: 0.55;
+            transform: none;
+            pointer-events: none;
+            filter: grayscale(0.2);
+        }
+
+        /* статы */
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            background: #050e02a0;
+            border-radius: 50px;
+            padding: 8px 18px;
+            margin-top: 18px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ecd98b;
+        }
+
+        .click-animation {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd966;
+            text-shadow: 0 0 5px red;
+            z-index: 1000;
+            animation: floatUp 0.6s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-80px) scale(1.5);
+            }
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #bbc48e;
             margin-top: 20px;
-            color: #444;
-            font-size: 0.8rem;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        @media (max-width: 480px) {
+            .bling-btn {
+                width: 170px;
+                height: 170px;
+            }
+            .bling-emoji {
+                font-size: 3.5rem;
+            }
+            .balance-amount {
+                font-size: 2.5rem;
+            }
+            .upgrade-card {
+                padding: 8px 12px;
+            }
+            .upgrade-btn {
+                padding: 6px 15px;
+                font-size: 0.8rem;
+                min-width: 75px;
+            }
         }
     </style>
 </head>
 <body>
-
-    <div class="warning-box">
-        <h1>403: ДОСТУП ЗАПРЕЩЕН</h1>
-        <p>Администрация не рекомендует нажимать на эту кнопку.</p>
-        <button class="btn" onclick="openSecret()">Я всё равно нажму</button>
+<div class="game-container">
+    <div class="balance-panel">
+        <div class="currency-name">💰 ВАЛЮТА «БЛЯТЬ» 💰</div>
+        <div class="balance-amount" id="balanceDisplay">0</div>
+        <div class="click-hint">👇 жмякай по кругу 👇</div>
     </div>
 
-    <div id="overlay" onclick="closeSecret()">
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y1ZnR3Ym5qZ3R4eG54eG54eG54eG54eG54eG54eG54eG54JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" alt="Rickroll">
-        <div class="close-text">Ну, тебя же предупреждали. (Кликни, чтобы уйти)</div>
+    <div class="click-area">
+        <div class="bling-btn" id="clickerButton">
+            <div class="bling-emoji">🤑💥</div>
+            <div class="bling-text">БЛЯТЬ!</div>
+        </div>
     </div>
 
-    <script>
-        function openSecret() {
-            document.getElementById('overlay').style.display = 'flex';
-        }
+    <div class="upgrades-section">
+        <div class="section-title">⚡ ПРОКАЧКА "БЛЯТЬ"-СИЛЫ ⚡</div>
 
-        function closeSecret() {
-            document.getElementById('overlay').style.display = 'none';
-        }
-    </script>
+        <!-- Улучшение 1: Мощный клик -->
+        <div class="upgrade-card" id="upgradePowerCard">
+            <div class="upgrade-info">
+                <div class="upgrade-name">💪 БЛЯТЬ-КУЛАК</div>
+                <div class="upgrade-desc">
+                    <span>➕ +1 за клик</span>
+                    <span class="upgrade-price" id="powerPrice">🔹 15 Б</span>
+                </div>
+            </div>
+            <button class="upgrade-btn" id="powerUpgradeBtn">КУПИТЬ</button>
+        </div>
 
+        <!-- Улучшение 2: Автокликер (помощник) -->
+        <div class="upgrade-card" id="upgradeAutoCard">
+            <div class="upgrade-info">
+                <div class="upgrade-name">🤖 БЛЯТЬ-БОТ</div>
+                <div class="upgrade-desc">
+                    <span>🔄 Автоклик 1 раз/сек</span>
+                    <span class="upgrade-price" id="autoPrice">🔹 50 Б</span>
+                </div>
+            </div>
+            <button class="upgrade-btn" id="autoUpgradeBtn">КУПИТЬ</button>
+        </div>
+
+        <!-- Улучшение 3: Множитель критического угара (бафф) -->
+        <div class="upgrade-card" id="upgradeCritCard">
+            <div class="upgrade-info">
+                <div class="upgrade-name">✨ БЛЯТЬ-ЭКСТАЗ</div>
+                <div class="upgrade-desc">
+                    <span>⚡ Крит шанс 15% x3 дохода</span>
+                    <span class="upgrade-price" id="critPrice">🔹 120 Б</span>
+                </div>
+            </div>
+            <button class="upgrade-btn" id="critUpgradeBtn">КУПИТЬ</button>
+        </div>
+    </div>
+
+    <div class="stats-row">
+        <span>💥 Сила клика: <strong id="clickPowerStat">1</strong></span>
+        <span>🤖 Авто-сек: <strong id="autoStat">0</strong></span>
+        <span>✨ Крит: <strong id="critStat">❌</strong></span>
+    </div>
+    <footer>«БЛЯТЬ» — коллекционируй с душой | Каждый клик приближает к величию</footer>
+</div>
+
+<script>
+    // ---------- Игровое состояние ----------
+    let blattBalance = 0;          // основная валюта "Блять"
+    let clickPower = 1;            // базовый доход за клик
+    let autoClickers = 0;          // количество автокликеров (доход/сек)
+    let critUnlocked = false;       // улучшение крита
+    let critChance = 0.15;          // 15% шанс
+    let critMultiplier = 3;         // x3 при крите
+    
+    // Цены улучшений (динамические, увеличиваются при покупке)
+    let powerUpgradeCost = 15;       // стоимость улучшения силы клика
+    let autoUpgradeCost = 50;        // стоимость автокликера
+    let critUpgradeCost = 120;       // стоимость крит улучшения
+    
+    // Базовая прибавка за улучшение силы клика
+    const POWER_INCREMENT = 1;
+    // Автокликер даёт +1 доход в секунду
+    const AUTO_INCREMENT = 1;
+    
+    // DOM элементы
+    const balanceSpan = document.getElementById('balanceDisplay');
+    const powerStatSpan = document.getElementById('clickPowerStat');
+    const autoStatSpan = document.getElementById('autoStat');
+    const critStatSpan = document.getElementById('critStat');
+    
+    const powerPriceSpan = document.getElementById('powerPrice');
+    const autoPriceSpan = document.getElementById('autoPrice');
+    const critPriceSpan = document.getElementById('critPrice');
+    
+    const powerBtn = document.getElementById('powerUpgradeBtn');
+    const autoBtn = document.getElementById('autoUpgradeBtn');
+    const critBtn = document.getElementById('critUpgradeBtn');
+    const clickBtn = document.getElementById('clickerButton');
+    
+    // Вспомогательная функция отображения баланса с форматированием
+    function updateUI() {
+        balanceSpan.innerText = Math.floor(blattBalance); // целые значения, хотя храним дробные для крита
+        powerStatSpan.innerText = clickPower;
+        autoStatSpan.innerText = autoClickers;
+        if (critUnlocked) {
+            critStatSpan.innerHTML = '✅ активен (15% x3)';
+        } else {
+            critStatSpan.innerHTML = '❌ не куплен';
+        }
+        
+        // Обновляем цены в интерфейсе
+        powerPriceSpan.innerHTML = `🔹 ${powerUpgradeCost} Б`;
+        autoPriceSpan.innerHTML = `🔹 ${autoUpgradeCost} Б`;
+        critPriceSpan.innerHTML = `🔹 ${critUpgradeCost} Б`;
+        
+        // Состояние кнопок (активна ли покупка)
+        if (blattBalance >= powerUpgradeCost) {
+            powerBtn.classList.remove('disabled');
+        } else {
+            powerBtn.classList.add('disabled');
+        }
+        
+        if (blattBalance >= autoUpgradeCost) {
+            autoBtn.classList.remove('disabled');
+        } else {
+            autoBtn.classList.add('disabled');
+        }
+        
+        // Крит можно купить только если ещё не куплен
+        if (!critUnlocked && blattBalance >= critUpgradeCost) {
+            critBtn.classList.remove('disabled');
+        } else if (!critUnlocked && blattBalance < critUpgradeCost) {
+            critBtn.classList.add('disabled');
+        } else if (critUnlocked) {
+            critBtn.classList.add('disabled');
+        }
+    }
+    
+    // Функция добавления валюты с учетом анимации, крита и т.д.
+    // rawGain - базовый множитель до бонусов (обычно clickPower для кликов, либо авто-доход)
+    // isAutoClick: false (от клика) — показываем анимацию, для авто не спамим.
+    function addCurrency(amount, isAuto = false, showFloating = true, floatingText = null) {
+        if (amount <= 0) return;
+        blattBalance += amount;
+        updateUI();
+        
+        // Показываем плавающий текст если нужно (только не для автокликера, чтобы не захламлять)
+        if (showFloating && !isAuto) {
+            createFloatingText(floatingText ? floatingText : `+${Math.floor(amount)} Блять!`);
+        } else if (showFloating && isAuto && amount > 0 && autoClickers > 0 && (Math.random() < 0.2)) {
+            // редко показываем авто-уведомление, чтоб не бесило
+            createFloatingText(`🤖 +${Math.floor(amount)}`, 'auto-float');
+        }
+    }
+    
+    // Анимация +текст
+    function createFloatingText(text, customClass = '') {
+        const floatDiv = document.createElement('div');
+        floatDiv.className = 'click-animation';
+        floatDiv.innerText = text;
+        // случайная небольшая позиция от центра клика
+        const xOffset = (Math.random() - 0.5) * 70;
+        const yOffset = (Math.random() - 0.5) * 40 - 20;
+        floatDiv.style.position = 'fixed';
+        floatDiv.style.left = `calc(50% + ${xOffset}px)`;
+        floatDiv.style.bottom = '30%';
+        floatDiv.style.fontSize = '1.7rem';
+        floatDiv.style.fontWeight = 'bold';
+        floatDiv.style.whiteSpace = 'nowrap';
+        floatDiv.style.zIndex = '9999';
+        document.body.appendChild(floatDiv);
+        setTimeout(() => {
+            floatDiv.remove();
+        }, 600);
+    }
+    
+    // Обработчик клика по кнопке (основной доход)
+    function handleClick() {
+        let baseIncome = clickPower;
+        let isCritical = false;
+        let finalIncome = baseIncome;
+        
+        // проверяем крит если улучшение куплено
+        if (critUnlocked) {
+            const roll = Math.random();
+            if (roll < critChance) {
+                isCritical = true;
+                finalIncome = baseIncome * critMultiplier;
+            }
+        }
+        
+        // прибавляем валюту
+        addCurrency(finalIncome, false, true, isCritical ? `КРИТ!!! x${critMultiplier} +${finalIncome} 🤯` : `+${finalIncome} Блять`);
+        
+        // дополнительный визуальный фидбек на кнопке (встряска)
+        const btn = clickBtn;
+        btn.style.transform = 'scale(0.94)';
+        setTimeout(() => {
+            btn.style.transform = '';
+        }, 100);
+        
+        // Можно добавить легкую вибрацию если есть поддержка (необязательно)
+        if (navigator.vibrate) navigator.vibrate(30);
+    }
+    
+    // Покупка улучшения силы клика
+    function buyPowerUpgrade() {
+        if (blattBalance >= powerUpgradeCost) {
+            blattBalance -= powerUpgradeCost;
+            clickPower += POWER_INCREMENT;
+            // увеличиваем стоимость следующего улучшения (логарифмический рост)
+            powerUpgradeCost = Math.floor(powerUpgradeCost * 1.6);
+            if (powerUpgradeCost < 15) powerUpgradeCost = 15;
+            updateUI();
+            createFloatingText(`💪 Сила клика +1 (теперь ${clickPower})`, 'upgrade');
+            // звукоподражание? без звука, но норм
+        } else {
+            createFloatingText(`❌ Не хватает Блять!`, 'error');
+        }
+        updateUI();
+    }
+    
+    // Покупка автокликера
+    function buyAutoClicker() {
+        if (blattBalance >= autoUpgradeCost) {
+            blattBalance -= autoUpgradeCost;
+            autoClickers += AUTO_INCREMENT;
+            autoUpgradeCost = Math.floor(autoUpgradeCost * 1.7);
+            if (autoUpgradeCost < 50) autoUpgradeCost = 50;
+            updateUI();
+            createFloatingText(`🤖 Приобрёл БОТА! +1 монета/сек`, 'upgrade');
+            // если раньше автокликеров не было, то интервал уже запущен на старте (пересоздавать не надо, просто меняем значение)
+        } else {
+            createFloatingText(`💰 Нужно больше Блять!`, 'error');
+        }
+        updateUI();
+    }
+    
+    // Покупка крит-улучшения (однократно)
+    function buyCritUpgrade() {
+        if (!critUnlocked && blattBalance >= critUpgradeCost) {
+            blattBalance -= critUpgradeCost;
+            critUnlocked = true;
+            // цена убирается, кнопка становится неактивной
+            updateUI();
+            createFloatingText(`✨ РАЗБЛОКИРОВАН КРИТИЧЕСКИЙ УГАР! (x3 шанс 15%) ✨`, 'critUnlock');
+        } else if (critUnlocked) {
+            createFloatingText(`⚠️ Крит уже куплен!`, 'error');
+        } else {
+            createFloatingText(`❌ Недостаточно валюты "Блять"`, 'error');
+        }
+        updateUI();
+    }
+    
+    // Автоматический доход каждую секунду
+    let autoInterval = null;
+    function startAutoIncome() {
+        if (autoInterval) clearInterval(autoInterval);
+        autoInterval = setInterval(() => {
+            if (autoClickers > 0) {
+                const autoIncome = autoClickers;  // каждый автокликер даёт 1 ед. в секунду
+                if (autoIncome > 0) {
+                    // Применяем крит к автодоходу? Сделаем честно: крит также может сработать при авто-доходе для веселья
+                    let finalAuto = autoIncome;
+                    let isCritAuto = false;
+                    if (critUnlocked) {
+                        if (Math.random() < critChance) {
+                            finalAuto = autoIncome * critMultiplier;
+                            isCritAuto = true;
+                        }
+                    }
+                    if (finalAuto > 0) {
+                        blattBalance += finalAuto;
+                        updateUI();
+                        // можно изредка показывать анимацию, но для тишины - показывать только если крит или редко
+                        if (isCritAuto) {
+                            createFloatingText(`🤖✨ КРИТ-АВТО +${finalAuto}`, 'auto-crit');
+                        } else if (autoClickers > 0 && Math.random() < 0.1) {
+                            createFloatingText(`🤖 +${finalAuto} (авто)`, 'auto');
+                        }
+                    }
+                }
+            }
+        }, 1000);
+    }
+    
+    // Привязка событий и инициализация игры
+    function initGame() {
+        updateUI();
+        startAutoIncome();
+        
+        // обработчики
+        clickBtn.addEventListener('click', handleClick);
+        powerBtn.addEventListener('click', buyPowerUpgrade);
+        autoBtn.addEventListener('click', buyAutoClicker);
+        critBtn.addEventListener('click', buyCritUpgrade);
+        
+        // дополнительный эффект для мобильных: предотвращаем двойное масштабирование
+        clickBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleClick();
+        });
+        // адаптив для кнопок улучшений
+        const allUpgradeBtns = [powerBtn, autoBtn, critBtn];
+        allUpgradeBtns.forEach(btn => {
+            btn.addEventListener('touchstart', (e) => {
+                // Не блокируем основное, просто чтоб без задержек
+                e.preventDefault();
+                btn.click();
+            });
+        });
+    }
+    
+    // Сохранение прогресса в localStorage (доп. плюшка)
+    function saveGame() {
+        const saveData = {
+            blattBalance: blattBalance,
+            clickPower: clickPower,
+            autoClickers: autoClickers,
+            critUnlocked: critUnlocked,
+            powerUpgradeCost: powerUpgradeCost,
+            autoUpgradeCost: autoUpgradeCost,
+            critUpgradeCost: critUpgradeCost,
+        };
+        localStorage.setItem('blyatClickerSave', JSON.stringify(saveData));
+    }
+    
+    function loadGame() {
+        const raw = localStorage.getItem('blyatClickerSave');
+        if (!raw) return;
+        try {
+            const data = JSON.parse(raw);
+            blattBalance = data.blattBalance ?? 0;
+            clickPower = data.clickPower ?? 1;
+            autoClickers = data.autoClickers ?? 0;
+            critUnlocked = data.critUnlocked ?? false;
+            powerUpgradeCost = data.powerUpgradeCost ?? 15;
+            autoUpgradeCost = data.autoUpgradeCost ?? 50;
+            critUpgradeCost = data.critUpgradeCost ?? 120;
+            // Валидация минимальных цен
+            if (powerUpgradeCost < 15) powerUpgradeCost = 15;
+            if (autoUpgradeCost < 50) autoUpgradeCost = 50;
+            if (critUpgradeCost < 120) critUpgradeCost = 120;
+            updateUI();
+        } catch(e) { console.warn(e);}
+    }
+    
+    // Автосохранение каждые 15 секунд
+    setInterval(() => {
+        saveGame();
+    }, 15000);
+    
+    // При закрытии страницы тоже сохраним
+    window.addEventListener('beforeunload', () => {
+        saveGame();
+    });
+    
+    // Загружаем сохранение и стартуем
+    loadGame();
+    initGame();
+    
+    // подстраховка интервала если после загрузки перезапуск
+    // перезапустим интервал на всякий, чтобы синхронизировать возможные косяки
+    setTimeout(() => {
+        if (autoInterval) clearInterval(autoInterval);
+        startAutoIncome();
+    }, 100);
+</script>
 </body>
 </html>
